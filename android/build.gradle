@@ -1,0 +1,58 @@
+buildscript {
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.3.0" // Make sure to update AGP version
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = "../build"
+
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace "com.example.yourapp" // Change to your package name
+    compileSdk 34  // Update this to the latest SDK version
+
+    defaultConfig {
+        applicationId "com.example.yourapp" // Change to your actual app ID
+        minSdk 21  // Minimum Android version supported
+        targetSdk 34  // Target Android version
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false  // Set to true if using ProGuard/R8
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+}
